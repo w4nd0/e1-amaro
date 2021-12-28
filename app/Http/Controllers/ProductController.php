@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Tag;
+use Illuminate\Support\Facades\Cache;
 
 class ProductController extends Controller
 {
@@ -27,12 +28,15 @@ class ProductController extends Controller
     {
         $product = $request->product;
         $tag = $request->tag;
+        $expiration = 60;
 
         if ($product) {
+            $key = 'item_' . $request->get('product');
             $query = $this->product->where([
                 ['name', 'like', '%' . $product . '%']
             ])->get();
         } elseif ($tag) {
+            $key = 'item_' . $request->get('tag');
             $resultQuery = $this->tag->where([
                 ['name', $tag]
             ])->with(['products' => function ($q) {
@@ -43,8 +47,13 @@ class ProductController extends Controller
         } else {
             return $this->product->all()->toJson();
         }
-
-        return $query->toJson();
+        return Cache::remember(
+            $key,
+            $expiration,
+            function () use ($query) {
+                return $query->toJson();
+            }
+        );
     }
 
     /**
@@ -55,11 +64,8 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        // $array = $request->products;
-        // $products = reset($array);
 
         foreach ($request->products as $product) {
-            // dd($product['name']);
 
             $newProduct = $this->product->create(array('id' => $product['id'], 'name' => $product['name']));
 
@@ -68,19 +74,12 @@ class ProductController extends Controller
             } else {
                 $tags = $product['tags'];
             }
-            // dd($tags);
             foreach ($tags as $tag) {
                 $newTag = $this->tag->firstOrCreate(array('name' => $tag));
                 $newProduct->tags()->attach($newTag['id']);
             }
         }
-        //     // $array = $product['tags'];
-        //     // $tags = reset($array);
-        //     // dd($product['tags'][0]);
-        //         dd($tag);
 
-        //     }
-        // }
         return response()->json(array('bom' => 'legal'), 200);
     }
 
