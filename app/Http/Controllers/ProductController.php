@@ -64,7 +64,6 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-
         foreach ($request->products as $product) {
 
             $newProduct = $this->product->create(array('id' => $product['id'], 'name' => $product['name']));
@@ -80,7 +79,7 @@ class ProductController extends Controller
             }
         }
 
-        return response()->json(array('bom' => 'legal'), 200);
+        return response()->json(array('success' => count($request->products) . ' products added'), 201);
     }
 
     /**

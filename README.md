@@ -1,66 +1,184 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# E1-Amaro
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Sobre o desafio
 
-## About Laravel
+### Criação de API para cadastro e consulta de produtos
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Você precisa criar uma API com os seguintes requisitos:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+#### End-point para inserção de dados
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+-   O cliente poderá enviá-los em arquivos json ou xml e a API
+    deverá inserir no banco de dados.
+-   Escolha o banco de dados que achar melhor.
 
-## Learning Laravel
+#### End-point para consulta destes produtos
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+-   Pode ser consultado por: id, nome ou tags. Caso a consulta seja por uma tag ou nome,
+    deverá listar todos os produtos com aquela respectiva busca, poderá ser feito em um ou mais end-points.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Link do deploy:
 
-## Laravel Sponsors
+https://ex1-amaro.herokuapp.com/api/
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### Instalação
 
-### Premium Partners
+Clonar o repositório e atualizar as dependências com:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[CMS Max](https://www.cmsmax.com/)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-- **[Romega Software](https://romegasoftware.com)**
+```
+composer install
+```
 
-## Contributing
+## **Rotas**
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+#### **POST products/**
 
-## Code of Conduct
+```
+RESPONSE STATUS -> HTTP 201 (created)
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Body:
 
-## Security Vulnerabilities
+Um arquivo em formato JSON ou XML
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+JSON
 
-## License
+```
+// products.json
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+{
+  "products": [
+    {
+      "id": 8371,
+      "name": "VESTIDO TRICOT CHEVRON",
+      "tags": ["balada", "neutro", "delicado", "festa"]
+    },
+    {
+      "id": 8367,
+      "name": "VESTIDO MOLETOM COM CAPUZ MESCLA",
+      "tags": ["casual", "metal", "metal"]
+    }
+  ]
+}
+```
+
+XML
+
+```
+// products.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<products>
+    <element>
+        <id>8371</id>
+        <name>VESTIDO TRICOT CHEVRON</name>
+        <tags>
+            <element>balada</element>
+            <element>neutro</element>
+            <element>delicado</element>
+            <element>festa</element>
+        </tags>
+    </element>
+    <element>
+        <id>8367</id>
+        <name>VESTIDO MOLETOM COM CAPUZ MESCLA</name>
+        <tags>
+            <element>casual</element>
+            <element>metal</element>
+            <element>metal</element>
+        </tags>
+    </element>
+</products>
+```
+
+Response:
+
+```
+{
+  "success": "3 products added"
+}
+```
+
+#### **GET products/**
+
+Retorna os produtos.
+
+Parâmetros de consulta: `/?tag=` e `/?product`.
+
+```
+RESPONSE STATUS -> HTTP 200 (ok)
+```
+
+Response:
+
+```
+[
+  {
+    "id": 8371,
+    "name": "VESTIDO TRICOT CHEVRON"
+  },
+  {
+    "id": 8367,
+    "name": "VESTIDO MOLETOM COM CAPUZ MESCLA"
+  },
+  {
+    "id": 8363,
+    "name": "VESTIDO CURTO MANGA LONGA LUREX"
+  }
+]
+```
+
+#### **GET products/\<int:product_id>/**
+
+Retorna o produto pelo seu ID.
+
+```
+RESPONSE STATUS -> HTTP 200 (ok)
+```
+
+Response:
+
+```
+{
+  "id": "8371",
+  "name": "VESTIDO TRICOT CHEVRON",
+  "tags": [
+    {
+      "id": 1,
+      "name": "balada"
+    },
+    {
+      "id": 2,
+      "name": "neutro"
+    },
+    {
+      "id": 3,
+      "name": "delicado"
+    },
+    {
+      "id": 4,
+      "name": "festa"
+    }
+  ]
+}
+```
+
+#### Requisitos Obrigatórios
+
+-   Ter uma cobertura de teste relativamente boa, a maior que você conseguir.
+-   Usar PHP
+-   Pode usar qualquer framework PHP para o desenvolvimento ou não usar nenhum, fica a sua escolha.
+-   Criar um cache para consulta.
+
+#### PLUS - Não necessário
+
+-   Colocar uma autenticação JWT.
+-   Usar PHP 7.1
+
+## Orientações
+
+-   Procure fazer uma API sucinta.
+-   Os arquivos (json, xml) junto com o formato que o cliente irá enviar estão no repositório.
+-   Pensa em escalabilidade, pode ser uma quantidade muito grande de dados.
+-   Coloque isso em um repositório GIT.
+-   Colocar as orientações de setup no README do seu repositório.
